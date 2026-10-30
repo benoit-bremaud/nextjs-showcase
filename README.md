@@ -12,27 +12,28 @@ Foundation only: the dashboard features are in progress. Conception: [ADR-0001](
 
 - Next.js 16 (App Router, Cache Components, Partial Prerendering), React 19, strict TypeScript
 - Vitest (unit, 80 % coverage floor) and Playwright (end-to-end)
-- GitHub Actions: lint, type check, tests, build, Gitleaks, CodeQL, dependency review; Dependabot
+- Local CI with just, lefthook and mise (four tiers, below); GitHub Actions runs `just check`, CodeQL and dependency review; Dependabot
 - Hosting: Vercel Hobby (planned)
 
 ## Run locally
 
-Requires Node.js 22 (`.nvmrc`).
+Requires [mise](https://mise.jdx.dev); it installs Node.js and every check tool pinned in `mise.toml`.
 
 ```bash
+mise install
+mise x -- lefthook install
 npm ci
 npm run dev
 ```
 
 ## Checks
 
-```bash
-npm run lint
-npm run typecheck
-npm run test:coverage
-npm run build
-npm run test:e2e
-```
+| Tier | Command | When |
+|---|---|---|
+| L0 | `just fast` | pre-commit hook: ESLint, typos, actionlint, Gitleaks on staged files |
+| L1 | `just check` | pre-push hook and GitHub CI: lint, type check, unit tests with coverage, Semgrep, osv-scanner, zizmor, Gitleaks |
+| L2 | `just gate` | before every merge: L1 + build, Playwright, SonarQube quality gate |
+| L3 | `just nightly` | on demand: L1 + TruffleHog and outdated tools |
 
 ## Licence
 

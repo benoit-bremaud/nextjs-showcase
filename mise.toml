@@ -1,0 +1,15 @@
+# Local CI toolchain (skill local-ci). Update with `mise latest <tool>`, then `mise install && mise lock`.
+[tools]
+node = "22.23.4"
+just = "1.59.0"
+lefthook = "2.2.2"
+typos = "1.51.1"
+actionlint = "1.7.12"
+zizmor = "1.31.1"
+gitleaks = "8.30.1"
+trufflehog = "3.99.7"
+osv-scanner = "2.7.0"
+"pipx:semgrep" = "1.182.1"
+
+[settings]
+lockfile = true
