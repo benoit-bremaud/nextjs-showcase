@@ -134,3 +134,6 @@ vite.config.ts.timestamp-*
 # playwright
 /test-results/
 /playwright-report/
+
+# sonarqube
+/.scannerwork/
