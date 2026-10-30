@@ -137,3 +137,6 @@ vite.config.ts.timestamp-*
 
 # sonarqube
 /.scannerwork/
+
+# mise local state
+/.mise/
