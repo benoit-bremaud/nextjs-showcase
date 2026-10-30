@@ -1,6 +1,7 @@
 # Use case diagram — dashboard
 
-The goals a visitor reaches on the GitHub projects dashboard (ADR-0001).
+The goals a visitor reaches on the GitHub projects dashboard (ADR-0001). Mermaid has no use case
+notation; this flowchart approximates it, GitHub being a secondary actor.
 
 ```mermaid
 flowchart LR
@@ -9,7 +10,7 @@ flowchart LR
   subgraph dashboard [nextjs-showcase]
     UC1((UC-01 Browse public projects))
     UC2((UC-02 Read a project's details))
-    UC3((UC-03 Fetch projects as JSON))
+    UC3((UC-03 Reuse the project data in my own tool))
   end
   visitor --- UC1
   visitor --- UC2
@@ -22,6 +23,6 @@ flowchart LR
 
 | ID | Goal | Primary actor | Notes |
 |---|---|---|---|
-| UC-01 | Browse the owner's public repositories, sorted by last push | Visitor | Static shell, streamed list |
+| UC-01 | Browse the owner's public repositories, sorted by last push | Visitor | Shell + streamed list (CSP spike may make it dynamic) |
 | UC-02 | Read one repository's description, languages and recent releases | Visitor | Paths prebuilt with `generateStaticParams` |
-| UC-03 | Fetch the project list as JSON | Visitor (developer) | Route Handler `GET /api/projects` |
+| UC-03 | Reuse the project list in my own tool | Visitor (developer) | Route Handler `GET /api/projects` |

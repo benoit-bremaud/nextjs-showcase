@@ -9,12 +9,12 @@ flowchart LR
     edge[«executionEnvironment» CDN<br/>static assets, prerendered shells]
     fn[«executionEnvironment» Node.js functions<br/>proxy.ts, pages, route handler]
   end
-  gh[«node» api.github.com]
-  repo[«node» GitHub repository<br/>benoit-bremaud/nextjs-showcase]
+  gh[«external system» api.github.com]
+  repo[«artifact» GitHub repository<br/>benoit-bremaud/nextjs-showcase]
   browser -- HTTPS 443 --> edge
-  edge --> fn
+  edge -- HTTPS --> fn
   fn -- HTTPS 443, optional read-only token --> gh
-  repo -- git push / pull request --> vercel
+  repo -. deploy on push / pull request .-> vercel
 ```
 
 | Tier | Trigger | URL |
