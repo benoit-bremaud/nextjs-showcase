@@ -22,10 +22,11 @@ lint:
 test:
     npm run test:coverage
 
-# SAST and dependency vulnerabilities (Semgrep Community Edition, no login, metrics off)
+# SAST and app dependency vulnerabilities (Semgrep CE, no login, metrics off; osv-scanner on the npm
+# lockfile only, the mise tool locks are dev tooling)
 security:
     semgrep scan --config p/default --error --metrics=off
-    osv-scanner scan source --recursive .
+    osv-scanner scan source --lockfile package-lock.json
 
 secrets:
     gitleaks git --redact --no-banner .
