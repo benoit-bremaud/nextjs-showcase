@@ -20,9 +20,8 @@ showcase.
 2. **Next.js features shown** (Next.js 16, App Router, Cache Components enabled):
    Server Components, `'use cache'` with `cacheLife`, Partial Prerendering through `<Suspense>`,
    `generateStaticParams`, a JSON Route Handler, the Metadata API with an Open Graph image,
-   `loading` / `error` / `not-found` files, and security headers set in `proxy.ts`. The CSP
-   targets a per-request nonce; because a nonce forces dynamic rendering, a spike before the
-   feature work decides per route between the nonce (dynamic) and hashes (prerendered).
+   `loading` / `error` / `not-found` files, and security headers set in `next.config.ts`
+   (CSP strategy: see the amendment below).
 3. **Hosting**: Vercel Hobby (non-commercial use), one preview deployment per pull request.
 
 ### MCDA (approved by the owner on 2026-10-30)
@@ -56,13 +55,13 @@ security headers 20.
 Sensitivity: Cloudflare only wins if infrastructure consistency weighs 40 or more. OpenNext
 supports Next.js 16, `'use cache'` and Partial Prerendering, but not Node.js middleware yet
 (opennext.js.org/cloudflare, read 2026-10-30); in
-Next.js 16 `proxy.ts` runs on Node.js, which is where the CSP nonce is generated.
+Next.js 16 `proxy.ts` runs on Node.js, which is where a CSP nonce would be generated.
 
 ## Consequences
 
 ### Positive
 
-- Every listed feature runs natively, including the nonce-based CSP.
+- Every listed feature runs natively on Vercel.
 - Public data only: no account, no form, no personal data to protect.
 
 ### Negative
@@ -70,7 +69,37 @@ Next.js 16 `proxy.ts` runs on Node.js, which is where the CSP nonce is generated
 - One more platform account (Vercel) next to Cloudflare.
 - Unauthenticated GitHub API calls are rate limited (60 per hour per IP); caching with
   `cacheLife` keeps calls low, and an optional read-only token can raise the limit.
-- A nonce-based CSP requires dynamic rendering (Next.js documentation), which conflicts with a
-  prerendered static shell. The implementation must confirm, page by page, how the nonce and
-  Partial Prerendering coexist; if they cannot, the CSP falls back to hashes on prerendered
-  routes, and this ADR is amended.
+- The CSP cannot be fully strict on scripts while Partial Prerendering is used (amendment below).
+
+## Amendment 1 — CSP strategy (2026-10-30, issue #12)
+
+A spike on Next.js 16.4.3 (local build, Playwright checking console CSP violations) gave:
+
+| Variant | Build | Strict CSP holds |
+|---|---|---|
+| Hashes through `experimental.sri`, PPR kept | static | no: 8 inline Next.js scripts blocked, no hydration |
+| Nonce set in `proxy.ts`, PPR kept | partial prerender | no: the static shell loads its scripts without the nonce |
+| Nonce, fully dynamic page, Cache Components on | build refused | — |
+| Nonce, Cache Components off | dynamic | yes |
+
+The Next.js CSP guide confirms that PPR is incompatible with a nonce-based CSP.
+
+MCDA (owner, 2026-10-30) — weights: modern Next.js showcase 35, CSP strength 30, KISS 20,
+robustness 15.
+
+| Option | Showcase | CSP | KISS | Robustness | Total /500 |
+|---|---|---|---|---|---|
+| **Keep PPR; strict CSP except `script-src 'self' 'unsafe-inline'`; SRI on script files** | 5 | 3 | 5 | 4 | **425** |
+| Nonce and dynamic rendering, Cache Components off | 3 | 5 | 4 | 5 | 410 |
+| PPR and inline-script hashes computed after the build | 4 | 5 | 1 | 1 | 325 |
+
+Sensitivity: the nonce option wins when CSP strength weighs 40 and the showcase 25.
+
+Decision: the first option. Every other directive stays strict (`default-src 'self'`,
+`object-src 'none'`, `base-uri 'self'`, `form-action 'self'`, `frame-ancestors 'none'`, no
+`unsafe-eval` in production). The site renders public data only and takes no user input, which
+limits what `'unsafe-inline'` exposes. No `proxy.ts` is needed. Experimental SRI hashes five of
+the six script files of the home page in 16.4.3; the end-to-end test checks that SRI is active,
+not that it is complete. Re-check this amendment on every Next.js upgrade.
+HSTS with `includeSubDomains` will apply to every subdomain of a future custom domain. Revisit when Next.js supports
+nonces or hashes for prerendered shells.

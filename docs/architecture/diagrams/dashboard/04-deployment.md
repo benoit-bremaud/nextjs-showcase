@@ -7,7 +7,7 @@ flowchart LR
   browser[«device» Browser]
   subgraph vercel [«node» Vercel]
     edge[«executionEnvironment» CDN<br/>static assets, prerendered shells]
-    fn[«executionEnvironment» Node.js functions<br/>proxy.ts, pages, route handler]
+    fn[«executionEnvironment» Node.js functions<br/>pages, route handler]
   end
   gh[«external system» api.github.com]
   repo[«artifact» GitHub repository<br/>benoit-bremaud/nextjs-showcase]

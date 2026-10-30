@@ -1,23 +1,17 @@
 # Sequence diagram — UC-01 Browse public projects
 
-How a request is served with Partial Prerendering and the data cache. Provisional: it shows the
-prerendered variant (hash-based CSP); the CSP spike of ADR-0001 may make the route fully dynamic
-with a nonce, in which case the shell is rendered per request.
+How a request is served with Partial Prerendering and the data cache. The CSP and security headers
+are static, set in `next.config.ts` (ADR-0001, amendment 1).
 
 ```mermaid
 sequenceDiagram
   actor V as Visitor
-  participant P as proxy.ts
   participant R as Page (Server Component)
   participant D as Data cache (lib/projects.ts)
   participant G as GitHub REST API
-  V->>P: GET /
-  activate P
-  P->>P: set CSP and security headers
-  P->>R: forward request
-  deactivate P
+  V->>R: GET /
   activate R
-  R-->>V: prerendered shell + Suspense fallback
+  R-->>V: prerendered shell + Suspense fallback, CSP and security headers
   R->>D: getProjects()
   activate D
   alt cache hit (within cacheLife)

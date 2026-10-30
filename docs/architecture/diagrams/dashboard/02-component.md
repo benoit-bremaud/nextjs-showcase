@@ -5,14 +5,14 @@ The parts of the application and their dependencies; only `lib/github.ts` touche
 ```mermaid
 flowchart TB
   subgraph app [Next.js app]
-    proxy[proxy.ts<br/>CSP + security headers]
+    config[next.config.ts<br/>CSP + security headers, SRI]
     pages[app/ pages<br/>Server Components + Suspense]
     api[app/api/projects/route.ts<br/>Route Handler]
     data[lib/projects.ts<br/>'use cache' + cacheLife<br/>Project type + pure mapping]
     client[lib/github.ts<br/>GitHub REST client]
   end
   github[(GitHub REST API)]
-  proxy -.->|request flow| pages
+  config -.->|response headers| pages
   pages --> data
   api --> data
   data --> client
