@@ -1,0 +1,5 @@
+# Generated lock sidecars (mise), not application code
+.mise/
+node_modules/
+.next/
+coverage/
