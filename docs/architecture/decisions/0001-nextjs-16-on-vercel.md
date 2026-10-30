@@ -103,3 +103,25 @@ the six script files of the home page in 16.4.3; the end-to-end test checks that
 not that it is complete. Re-check this amendment on every Next.js upgrade.
 HSTS with `includeSubDomains` will apply to every subdomain of a future custom domain. Revisit when Next.js supports
 nonces or hashes for prerendered shells.
+
+## Amendment 2 — Hosting re-check and not-found status (2026-10-30, issue #16)
+
+Once amendment 1 removed `proxy.ts`, the owner asked whether Cloudflare, the existing platform,
+could replace Vercel. Spike with `@opennextjs/cloudflare` 1.20.13 and Next.js 16.4.3 (local
+`wrangler dev`): the Worker weighs 980 KiB gzip, under the 3 MiB free-plan limit, but every page
+request returns 500; the Workers runtime cancels it as hung after Next.js warns that Cache
+Components cannot be guaranteed with the runtime's `setTimeout()`.
+
+| Option | Fidelity 35 | Cost 25 | Consistency 20 | Security 20 | Total /500 |
+|---|---|---|---|---|---|
+| **Vercel Hobby, Cloudflare tracked in issue #15** | 5 | 5 | 2 | 4 | **420** |
+| Cloudflare with Cache Components off | 2 | 5 | 5 | 5 | 395 |
+| Wait for OpenNext before going live | 5 | 5 | 5 | 5 | blocked, no date |
+
+Decision (owner): stay on Vercel Hobby, free; re-test Cloudflare on each OpenNext release
+(issue #15) and amend this ADR when the home page renders there with Cache Components on.
+
+Not-found status: with Partial Prerendering, an unknown `/projects/<name>` streams its shell before
+`notFound()` runs, so the response stays 200 and Next.js adds `<meta name="robots"
+content="noindex">` (Next.js `notFound` reference). `dynamicParams` is unavailable with Cache
+Components. Accepted: the page is not indexed and shows the not-found UI.

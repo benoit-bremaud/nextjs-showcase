@@ -6,7 +6,7 @@ It complements [benoitbremaud.fr](https://benoitbremaud.fr), a static Astro site
 
 ## Status
 
-Foundation only: the dashboard features are in progress. Conception: [ADR-0001](docs/architecture/decisions/0001-nextjs-16-on-vercel.md) and the [dashboard UML diagrams](docs/architecture/diagrams/dashboard/).
+Dashboard working locally: project list, project pages, `GET /api/projects` and an Open Graph image; deployment to Vercel pending. Conception: [ADR-0001](docs/architecture/decisions/0001-nextjs-16-on-vercel.md) and the [dashboard UML diagrams](docs/architecture/diagrams/dashboard/).
 
 ## Stack
 
@@ -25,6 +25,13 @@ mise x -- lefthook install
 npm ci
 npm run dev
 ```
+
+The app reads the public GitHub API anonymously (60 requests per hour, cached for hours). Optional variables:
+
+| Variable | Effect |
+|---|---|
+| `GITHUB_TOKEN` | read-only token, raises the API rate limit |
+| `GITHUB_FIXTURES=1` | serves `src/lib/fixtures/repos.json` instead of the API (tests, offline) |
 
 ## Checks
 

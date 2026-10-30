@@ -1,0 +1,50 @@
+[
+  {
+    "name": "brickpix",
+    "description": "Turn a photo into a LEGO mosaic plan.",
+    "html_url": "https://github.com/benoit-bremaud/brickpix",
+    "homepage": null,
+    "language": "TypeScript",
+    "topics": ["lego", "image-processing"],
+    "stargazers_count": 3,
+    "pushed_at": "2026-10-29T18:00:00Z",
+    "fork": false,
+    "archived": false
+  },
+  {
+    "name": "retro-shmup",
+    "description": "A retro shoot 'em up for the browser.",
+    "html_url": "https://github.com/benoit-bremaud/retro-shmup",
+    "homepage": "https://example.com/retro-shmup",
+    "language": "JavaScript",
+    "topics": ["game"],
+    "stargazers_count": 1,
+    "pushed_at": "2026-10-20T09:00:00Z",
+    "fork": false,
+    "archived": false
+  },
+  {
+    "name": "old-experiment",
+    "description": null,
+    "html_url": "https://github.com/benoit-bremaud/old-experiment",
+    "homepage": "",
+    "language": null,
+    "topics": [],
+    "stargazers_count": 0,
+    "pushed_at": "2024-01-01T00:00:00Z",
+    "fork": false,
+    "archived": true
+  },
+  {
+    "name": "forked-lib",
+    "description": "A fork, hidden from the dashboard.",
+    "html_url": "https://github.com/benoit-bremaud/forked-lib",
+    "homepage": null,
+    "language": "Go",
+    "topics": [],
+    "stargazers_count": 0,
+    "pushed_at": "2026-10-30T00:00:00Z",
+    "fork": true,
+    "archived": false
+  }
+]

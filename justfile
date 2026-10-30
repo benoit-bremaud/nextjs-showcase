@@ -36,7 +36,7 @@ check: lint test security secrets
 
 # L2 — pre-merge, called by review-local § 2b
 gate base="origin/main": check
-    npm run build
+    GITHUB_FIXTURES=1 npm run build
     npm run test:e2e
     if [ -f sonar-project.properties ]; then \
       command -v sonar-scanner > /dev/null || { echo "gate: sonar-scanner not on PATH (system tool, skill local-ci rule 2)" >&2; exit 1; }; \
